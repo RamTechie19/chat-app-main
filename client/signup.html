@@ -5,6 +5,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sign Up - Chat App</title>
   <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Error message styling */
+    .error {
+      color: red;
+      font-size: 0.9rem;
+      margin-top: -10px;
+      margin-bottom: 10px;
+      display: none;
+    }
+
+    /* Success popup styling */
+    .popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #4caf50;
+      color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      display: none;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
@@ -12,12 +37,64 @@
     <form id="signup-form">
       <label for="username">Username:</label>
       <input type="text" id="username" name="username" required>
+      <span id="username-error" class="error">Username must not exceed 8 characters.</span>
+
       <label for="password">Password:</label>
       <input type="password" id="password" name="password" required>
+      <span id="password-error" class="error">Password must not exceed 8 characters.</span>
+
       <button type="submit" class="btn">Sign Up</button>
     </form>
     <a href="login.html" class="link">Already have an account? Login</a>
   </div>
-  <script src="app.js"></script>
+
+  <!-- Success Popup -->
+  <div id="success-popup" class="popup">Sign Up Successful! Redirecting to login...</div>
+
+  <script>
+    // Add input validation logic
+    document.getElementById('signup-form').addEventListener('submit', function (event) {
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+
+      // Error message elements
+      const usernameError = document.getElementById('username-error');
+      const passwordError = document.getElementById('password-error');
+      const successPopup = document.getElementById('success-popup');
+
+      // Validation flags
+      let isValid = true;
+
+      // Validate username (must not exceed 8 characters)
+      if (username.length > 8) {
+        usernameError.style.display = 'block';
+        isValid = false;
+      } else {
+        usernameError.style.display = 'none';
+      }
+
+      // Validate password (must not exceed 8 characters)
+      if (password.length > 8) {
+        passwordError.style.display = 'block';
+        isValid = false;
+      } else {
+        passwordError.style.display = 'none';
+      }
+
+      // Prevent form submission if validation fails
+      if (!isValid) {
+        event.preventDefault();
+        return;
+      }
+
+      // If validation passes, show success popup and redirect to login
+      event.preventDefault(); // Prevent default form submission
+      successPopup.style.display = 'block';
+
+      setTimeout(() => {
+        window.location.href = 'login.html'; // Redirect to login page after 2 seconds
+      }, 2000);
+    });
+  </script>
 </body>
 </html>

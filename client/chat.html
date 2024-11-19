@@ -4,9 +4,33 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Two-User Chat - Chat App</title>
-    <link rel="stylesheet" href="chat.css">
+    <link rel="stylesheet" href="chat.css" />
+    <style>
+      /* Logout button styling */
+      .logout-button {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background-color: #f44336;
+        color: #ffffff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: background-color 0.3s ease;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      .logout-button:hover {
+        background-color: #d32f2f;
+      }
+    </style>
   </head>
   <body>
+    <!-- Logout Button -->
+    <button id="logout-button" class="logout-button">Logout</button>
+
     <div class="wrapper">
       <!-- Chat window for User 1 -->
       <div class="container" id="user1-container">
@@ -50,6 +74,14 @@
         const user2Input = document.getElementById("user2-input");
         const user1SendButton = document.getElementById("user1-send");
         const user2SendButton = document.getElementById("user2-send");
+
+        // Logout button
+        const logoutButton = document.getElementById("logout-button");
+
+        // Logout button click event
+        logoutButton.addEventListener("click", () => {
+          window.location.href = "login.html"; // Redirect to login page
+        });
 
         // Function to display messages in both containers
         function displayMessageInBothContainers(sender, content) {

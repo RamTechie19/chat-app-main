@@ -8,7 +8,7 @@
 /* Body Styling */
 body {
   font-family: 'Arial', sans-serif;
-  background: linear-gradient(135deg, #00796b, #004d40);
+  background: linear-gradient(135deg, #a8d8f0, #e0f7fa); /* Light blue gradient */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -32,7 +32,7 @@ body {
 .container h1 {
   font-size: 2rem;
   margin-bottom: 1.5rem;
-  color: #004d40;
+  color: #0288d1; /* Updated to match the light blue theme */
   text-transform: capitalize;
 }
 
@@ -62,15 +62,15 @@ input[type="password"] {
 
 input[type="text"]:focus,
 input[type="password"]:focus {
-  border-color: #00796b;
-  box-shadow: 0 0 5px rgba(0, 121, 107, 0.5);
+  border-color: #0288d1; /* Updated to match the light blue theme */
+  box-shadow: 0 0 5px rgba(2, 136, 209, 0.5);
 }
 
 /* Submit Button */
 .btn {
   padding: 0.8rem 1.5rem;
   font-size: 1rem;
-  background-color: #00796b;
+  background-color: #0288d1; /* Updated to match the light blue theme */
   color: #ffffff;
   border: none;
   border-radius: 8px;
@@ -79,7 +79,7 @@ input[type="password"]:focus {
 }
 
 .btn:hover {
-  background-color: #004d40;
+  background-color: #026aa7; /* Slightly darker blue for hover effect */
 }
 
 /* Link */
@@ -87,13 +87,13 @@ input[type="password"]:focus {
   display: block;
   margin-top: 1rem;
   font-size: 0.9rem;
-  color: #00796b;
+  color: #0288d1; /* Updated to match the light blue theme */
   text-decoration: none;
   transition: color 0.3s ease;
 }
 
 .link:hover {
-  color: #004d40;
+  color: #026aa7; /* Hover color updated */
 }
 
 /* Responsive Design */
