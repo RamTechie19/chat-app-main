@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Two-User Chat - Chat App</title>
+    <link rel="stylesheet" href="chat.css">
+  </head>
+  <body>
+    <div class="wrapper">
+      <!-- Chat window for User 1 -->
+      <div class="container" id="user1-container">
+        <h1>User 1 Chat</h1>
+        <div class="chat-messages" id="user1-messages"></div>
+        <div class="chat-input">
+          <input
+            type="text"
+            id="user1-input"
+            class="message-input"
+            placeholder="Type your message..."
+          />
+          <button id="user1-send" class="send-button">Send</button>
+        </div>
+      </div>
+
+      <!-- Chat window for User 2 -->
+      <div class="container" id="user2-container">
+        <h1>User 2 Chat</h1>
+        <div class="chat-messages" id="user2-messages"></div>
+        <div class="chat-input">
+          <input
+            type="text"
+            id="user2-input"
+            class="message-input"
+            placeholder="Type your message..."
+          />
+          <button id="user2-send" class="send-button">Send</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // Set up WebSocket connection to the server
+        const ws = new WebSocket("ws://localhost:6969");
+
+        const user1Messages = document.getElementById("user1-messages");
+        const user2Messages = document.getElementById("user2-messages");
+        const user1Input = document.getElementById("user1-input");
+        const user2Input = document.getElementById("user2-input");
+        const user1SendButton = document.getElementById("user1-send");
+        const user2SendButton = document.getElementById("user2-send");
+
+        // Function to display messages in both containers
+        function displayMessageInBothContainers(sender, content) {
+          const messageText = `${sender}: ${content}`;
+
+          // User 1 display
+          const user1Message = document.createElement("div");
+          user1Message.classList.add(
+            "message",
+            sender === "User 1" ? "sent" : "received"
+          );
+          user1Message.textContent = messageText;
+          user1Messages.appendChild(user1Message);
+          user1Messages.scrollTop = user1Messages.scrollHeight;
+
+          // User 2 display
+          const user2Message = document.createElement("div");
+          user2Message.classList.add(
+            "message",
+            sender === "User 2" ? "sent" : "received"
+          );
+          user2Message.textContent = messageText;
+          user2Messages.appendChild(user2Message);
+          user2Messages.scrollTop = user2Messages.scrollHeight;
+        }
+
+        // Handle incoming WebSocket messages
+        ws.onmessage = (event) => {
+          const message = JSON.parse(event.data);
+          displayMessageInBothContainers(message.username, message.content);
+        };
+
+        // Send message from User 1
+        user1SendButton.addEventListener("click", () => {
+          if (user1Input.value.trim()) {
+            const message = { username: "User 1", content: user1Input.value };
+            ws.send(JSON.stringify(message)); // Send message over WebSocket
+            displayMessageInBothContainers("User 1", user1Input.value); // Display in both windows
+            user1Input.value = ""; // Clear input
+          }
+        });
+
+        // Send message from User 2
+        user2SendButton.addEventListener("click", () => {
+          if (user2Input.value.trim()) {
+            const message = { username: "User 2", content: user2Input.value };
+            ws.send(JSON.stringify(message)); // Send message over WebSocket
+            displayMessageInBothContainers("User 2", user2Input.value); // Display in both windows
+            user2Input.value = ""; // Clear input
+          }
+        });
+
+        // Allow "Enter" key to send messages for both users
+        user1Input.addEventListener("keypress", (e) => {
+          if (e.key === "Enter") user1SendButton.click();
+        });
+
+        user2Input.addEventListener("keypress", (e) => {
+          if (e.key === "Enter") user2SendButton.click();
+        });
+      });
+    </script>
+  </body>
+</html>
