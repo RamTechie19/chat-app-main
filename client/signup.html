@@ -6,7 +6,6 @@
   <title>Sign Up - Chat App</title>
   <link rel="stylesheet" href="styles.css">
   <style>
-    /* Error message styling */
     .error {
       color: red;
       font-size: 0.9rem;
@@ -15,7 +14,6 @@
       display: none;
     }
 
-    /* Success popup styling */
     .popup {
       position: fixed;
       top: 50%;
@@ -28,6 +26,7 @@
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
       text-align: center;
       display: none;
+      z-index: 1000;
     }
   </style>
 </head>
@@ -37,11 +36,11 @@
     <form id="signup-form">
       <label for="username">Username:</label>
       <input type="text" id="username" name="username" required>
-      <span id="username-error" class="error">Username must not exceed 8 characters.</span>
+      <span id="username-error" class="error">Username must be 4-8 characters long.</span>
 
       <label for="password">Password:</label>
       <input type="password" id="password" name="password" required>
-      <span id="password-error" class="error">Password must not exceed 8 characters.</span>
+      <span id="password-error" class="error">Password must be 6-8 characters long.</span>
 
       <button type="submit" class="btn">Sign Up</button>
     </form>
@@ -52,8 +51,9 @@
   <div id="success-popup" class="popup">Sign Up Successful! Redirecting to login...</div>
 
   <script>
-    // Add input validation logic
-    document.getElementById('signup-form').addEventListener('submit', function (event) {
+    document.getElementById('signup-form').addEventListener('submit', async function (event) {
+      event.preventDefault();
+      
       const username = document.getElementById('username').value.trim();
       const password = document.getElementById('password').value.trim();
 
@@ -65,35 +65,55 @@
       // Validation flags
       let isValid = true;
 
-      // Validate username (must not exceed 8 characters)
-      if (username.length > 8) {
+      // Validate username (4-8 characters)
+      if (username.length < 4 || username.length > 8) {
+        usernameError.textContent = 'Username must be 4-8 characters long.';
         usernameError.style.display = 'block';
         isValid = false;
       } else {
         usernameError.style.display = 'none';
       }
 
-      // Validate password (must not exceed 8 characters)
-      if (password.length > 8) {
+      // Validate password (6-8 characters)
+      if (password.length < 6 || password.length > 8) {
+        passwordError.textContent = 'Password must be 6-8 characters long.';
         passwordError.style.display = 'block';
         isValid = false;
       } else {
         passwordError.style.display = 'none';
       }
 
-      // Prevent form submission if validation fails
+      // If validation fails, stop submission
       if (!isValid) {
-        event.preventDefault();
         return;
       }
 
-      // If validation passes, show success popup and redirect to login
-      event.preventDefault(); // Prevent default form submission
-      successPopup.style.display = 'block';
+      try {
+        const response = await fetch('/signup', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ username, password })
+        });
 
-      setTimeout(() => {
-        window.location.href = 'login.html'; // Redirect to login page after 2 seconds
-      }, 2000);
+        if (response.ok) {
+          // Show success popup
+          successPopup.style.display = 'block';
+
+          // Redirect to login page after 2 seconds
+          setTimeout(() => {
+            window.location.href = 'login.html';
+          }, 2000);
+        } else {
+          // Handle errors from server
+          const errorText = await response.text();
+          alert(errorText || 'Sign up failed');
+        }
+      } catch (error) {
+        console.error('Error during signup:', error);
+        alert('An error occurred during sign up');
+      }
     });
   </script>
 </body>
